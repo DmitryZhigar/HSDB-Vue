@@ -13,17 +13,21 @@
       <img src="./assets/warlock-icon.png" @dblclick="filterClass='Warlock'">
       <img src="./assets/warrior-icon.png" @dblclick="filterClass='Warrior'">
 
-      <div v-for="cost in manaData" style="display: inline">
-        <input type="radio" name="mana" @click="setManaCost(cost)">{{cost.toString()}}
-      </div> <br>
 
-      <div v-for="rar in rarities" style="display: inline">
-        <input type="radio" name="rarity" @click="setRarity(rar)">{{rar.toString()}}
-      </div> <br>
-
-      <div v-for="rac in races" style="display: inline">
-        <input type="radio" name="race" @click="setManaCost(rac)">{{rac.toString()}}
+      <div v-for="cost in manaData" class="form-check form-check-inline">
+        <input type="radio" class="form-check-input"  name="mana" @click="setManaCost(cost)">
+        <label class="form-check-label">{{cost.toString()}}</label>
       </div>
+
+
+      <div v-for="rar in rarities" class="form-check form-check-inline">
+        <input type="radio" class="form-check-input"  name="rarity" @click="setRarity(rar)">
+        <label class="form-check-label">{{rar.toString()}}</label>
+      </div>
+
+      <!--<div v-for="rac in races" style="display: inline">
+        <input type="radio" name="race" @click="setManaCost(rac)">{{rac.toString()}}
+      </div>-->
     </div>
     <Deck class="deck" :menu-class="filterClass.toString()"
           v-bind:menu-mana="manaCost"

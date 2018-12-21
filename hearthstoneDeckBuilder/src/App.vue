@@ -4,13 +4,18 @@
   </div>
 </template>
 <script>
-import Menu from './Menu'
-export default {
-  name: 'App',
-  components: {
-    Menu
+  import 'bootstrap/dist/css/bootstrap.css'
+  import 'bootstrap-vue/dist/bootstrap-vue.css'
+  import BootstrapVue from 'bootstrap-vue'
+  import Menu from './Menu'
+
+
+  export default {
+    name: 'App',
+    components: {
+      Menu
+    }
   }
-}
 </script>
 
 <style>

@@ -256,8 +256,7 @@
   }
 
   .deck-left {
-    width: 17%;
-    position: fixed;
+    width: 100%;
     overflow-y: scroll;
   }
 
