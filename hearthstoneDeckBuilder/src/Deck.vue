@@ -33,7 +33,6 @@
 
 <script>
 
-  // import ListCards from "./ListCards";
   import {encode, decode} from 'deckstrings'
   import VueLoading from "vue-loading-overlay/src/js/Component";
 
@@ -62,7 +61,6 @@
         races: [], //рассы
         currentClass: '',
         mechanics: [], //механики
-        manaData: [0, 1, 2, 3, 4, 5, 6, 7, 8],
 
         classes: {
           Druid: 274,
@@ -151,7 +149,9 @@
       manaFiltered: function() {
         if(this.MenuMana > -1) {
           return this.massive.filter(card => card['cost'] === this.MenuMana)
-        }else
+        }else if(this.MenuMana === 9){
+          return this.massive.filter(card => card['cost'] >= this.MenuMana)
+        }
         return this.massive;
       },
 
@@ -228,19 +228,19 @@
           cards, // массив из пар [dbfid, count]
           heroes: [this.classes[this.currentClass]],
           format: 1 // 1 for Wild, 2 for Standard
-        }
+        };
         const deckstring = encode(deck);
         const copyToClipboard = str => {
           const el = document.createElement('textarea');
-          el.value = str
+          el.value = str;
           el.setAttribute('readonly', '');
           el.style.position = 'absolute';
           el.style.left = '-9999px';
           document.body.appendChild(el);
-          el.select()
+          el.select();
           document.execCommand('copy');
           document.body.removeChild(el)
-        }
+        };
         copyToClipboard(deckstring)
 
       },

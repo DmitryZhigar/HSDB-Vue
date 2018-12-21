@@ -13,35 +13,20 @@
       <img src="./assets/warlock-icon.png" @dblclick="filterClass='Warlock'">
       <img src="./assets/warrior-icon.png" @dblclick="filterClass='Warrior'">
       <form>
-        <input type="radio" name="rare" @click="setRarity('')" > All
-        <input type="radio" name="rare" @click="setRarity('Common')" > Common
-        <input type="radio" name="rare" @click="setRarity('Rare')" > Rare
-        <input type="radio" name="rare" @click="setRarity('Epic')" > Epic
-        <input type="radio" name="rare" @click="setRarity('Legendary')" > Legendary
+        <input type="radio" name="rare" @click="setRarity('')"> All
+        <input type="radio" name="rare" @click="setRarity('Common')"> Common
+        <input type="radio" name="rare" @click="setRarity('Rare')"> Rare
+        <input type="radio" name="rare" @click="setRarity('Epic')"> Epic
+        <input type="radio" name="rare" @click="setRarity('Legendary')"> Legendary
       </form>
-      <ul >
-        <li v-for="cost in manaData">{{cost.toString()}}</li>
-      </ul>
 
-      <form class="menu">
-        <input type="radio" name="mana" @click="setManaCost(-1)" > All
-        <input type="radio" name="mana" @click="setManaCost(0)"> 0
-        <input type="radio" name="mana" @click="setManaCost(1)"> 1
-        <input type="radio" name="mana" @click="setManaCost(2)"> 2
-        <input type="radio" name="mana" @click="setManaCost(3)"> 3
-        <input type="radio" name="mana" @click="setManaCost(4)"> 4
-        <input type="radio" name="mana" @click="setManaCost(5)"> 5
-        <input type="radio" name="mana" @click="setManaCost(6)"> 6
-        <input type="radio" name="mana" @click="setManaCost(7)"> 7
-        <input type="radio" name="mana" @click="setManaCost(8)"> 8
-        <input type="radio" name="mana" @click="setManaCost(9)"> 9
-        <input type="radio" name="mana" @click="setManaCost(10)"> 10
-        <input type="radio" name="mana" @click="setManaCost(11)"> 11
-      </form>
-      </div>
+        <div v-for="cost in manaData" style="display: inline">
+          <input type="radio" name="mana"  @click="setManaCost(cost)">{{cost.toString()}}
+        </div>
+    </div>
     <Deck class="deck" :menu-class="filterClass.toString()"
-                        v-bind:menu-mana="manaCost"
-    :menu-rarity="rarity.toString()"/>
+          v-bind:menu-mana="manaCost"
+          :menu-rarity="rarity.toString()"/>
   </div>
 </template>
 
@@ -59,7 +44,7 @@
       return {
         filterClass: 'Neutral',
         manaCost: -1,
-        rarity:'',
+        rarity: '',
         adventures: [], //приключения
         selectedAdventure: [], //Выбранные приключения
         selectedRaces: [], //Выбранные рассы
@@ -69,7 +54,7 @@
         mechanics: [],
         races: [],
         heroes: [],
-        manaData: [0, 1, 2, 3, 4, 5, 6, 7, 8, '9+'],
+        manaData: ['all' ,0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       }
     },
 
@@ -78,17 +63,16 @@
     },
     methods: {
 
-      setManaCost: function(item){
-        this.manaCost=item;
+      setManaCost: function (item) {
+        this.manaCost = item;
       },
 
-      setRarity: function(item) {
-        this.rarity=item
+      setRarity: function (item) {
+        this.rarity = item
       },
 
 
       getAdventures: async function () {
-        //https://omgvamp-hearthstone-v1.p.mashape.com/cards?collectible=1  https://omgvamp-hearthstone-v1.p.mashape.com/info?callback=standard
         const resp = await fetch('https://omgvamp-hearthstone-v1.p.mashape.com/cards?collectible=1', {
           headers: {
             'Content-Type': 'application/json',
@@ -124,11 +108,11 @@
     padding-left: 0; /*убираем левый отступ, равный 40px*/
   }
 
-  .deck{
+  .deck {
     margin-top: 5%;
   }
 
-  .currentClass{
+  .currentClass {
     display: inline-block;
   }
 
@@ -144,7 +128,7 @@
     background-color: tan;
   }
 
-  .background{
+  .background {
     background-color: tan;
   }
 
