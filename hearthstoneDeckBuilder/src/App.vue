@@ -1,5 +1,5 @@
 <template>
-  <div class="background">
+  <div>
     <Menu/>
   </div>
 </template>
@@ -14,7 +14,5 @@ export default {
 </script>
 
 <style>
-.background{
-  background-color: tan;
-}
+
 </style>

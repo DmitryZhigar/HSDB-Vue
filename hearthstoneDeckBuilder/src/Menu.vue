@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <template>
-  <div class="background">
+  <div>
     <div class="menu freeze">
       <img src="./assets/common.png" @dblclick="filterClass='Neutral'">
       <img src="./assets/druid-icon.png" @dblclick="filterClass='Druid'">
@@ -12,21 +12,23 @@
       <img src="./assets/shaman-icon.png" @dblclick="filterClass='Shaman'">
       <img src="./assets/warlock-icon.png" @dblclick="filterClass='Warlock'">
       <img src="./assets/warrior-icon.png" @dblclick="filterClass='Warrior'">
-      <form>
-        <input type="radio" name="rare" @click="setRarity('')"> All
-        <input type="radio" name="rare" @click="setRarity('Common')"> Common
-        <input type="radio" name="rare" @click="setRarity('Rare')"> Rare
-        <input type="radio" name="rare" @click="setRarity('Epic')"> Epic
-        <input type="radio" name="rare" @click="setRarity('Legendary')"> Legendary
-      </form>
 
-        <div v-for="cost in manaData" style="display: inline">
-          <input type="radio" name="mana"  @click="setManaCost(cost)">{{cost.toString()}}
-        </div>
+      <div v-for="cost in manaData" style="display: inline">
+        <input type="radio" name="mana" @click="setManaCost(cost)">{{cost.toString()}}
+      </div> <br>
+
+      <div v-for="rar in rarities" style="display: inline">
+        <input type="radio" name="rarity" @click="setRarity(rar)">{{rar.toString()}}
+      </div> <br>
+
+      <div v-for="rac in races" style="display: inline">
+        <input type="radio" name="race" @click="setManaCost(rac)">{{rac.toString()}}
+      </div>
     </div>
     <Deck class="deck" :menu-class="filterClass.toString()"
           v-bind:menu-mana="manaCost"
           :menu-rarity="rarity.toString()"/>
+
   </div>
 </template>
 
@@ -45,6 +47,7 @@
         filterClass: 'Neutral',
         manaCost: -1,
         rarity: '',
+        rarities: ['all'],
         adventures: [], //приключения
         selectedAdventure: [], //Выбранные приключения
         selectedRaces: [], //Выбранные рассы
@@ -52,14 +55,15 @@
         selectedRariry: '', //Выбранная редкость карт
         selectedMechanics: [], //Выбранные механики
         mechanics: [],
-        races: [],
+        races: ['all'],
         heroes: [],
-        manaData: ['all' ,0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+        manaData: ['all', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+
       }
     },
 
     created() {
-      //this.getAdventures()
+      this.getAdventures()
     },
     methods: {
 
@@ -82,17 +86,38 @@
           method: 'GET',
           mode: 'cors',
           cache: 'default'
-        })
+        }).then(r => r.json())
 
         for (let adv in resp) {
           if (resp[adv].length > 0) {
             if (adv !== 'Hero Skins') {
-              // Добавление приключений
               this.adventures.push(adv)
+            }
+            for (let card of resp[adv]) {
+              if (card.type === 'Hero' && !this.heroes.includes(card)) {
+                this.heroes.push(card) // Добавление героев TODO - возможность выбора не только класса но и героя
+              } else {
+                if ('race' in card) {
+                  if (!this.races.includes(card.race)) {
+                    this.races.push(card.race)
+                  }
+                }
+                if ('rarity' in card) {
+                  if (!this.rarities.includes(card.rarity)) {
+                    this.rarities.push(card.rarity)
+                  }
+                }
+                if ('mechanics' in card) {
+                  for (let mechanic of card['mechanics']) {
+                    if (!this.mechanics.includes(mechanic.name)) {
+                      this.mechanics.push(mechanic.name)
+                    }
+                  }
+                }
+              }
             }
           }
         }
-
       },
 
     },
@@ -118,14 +143,13 @@
 
   .menu img {
     display: inline-block;
-    width: 80px;
-    height: 80px;
+    width: 40px;
+    height: 40px;
   }
 
   .freeze {
     width: 100%;
     position: fixed;
-    background-color: tan;
   }
 
   .background {

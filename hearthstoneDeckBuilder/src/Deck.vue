@@ -1,12 +1,12 @@
 <template>
-  <div style="float:left; width:100%; height:100%; background: tan">
-    <vue-loading :active.sync="!this.isLoaded" style=" margin-top: 5%; text-align: center" >
+  <div style="float:left; width:100%; height:100%;">
+    <vue-loading :active.sync="!this.isLoaded" style=" margin-top: 5%; text-align: center">
     </vue-loading>
     <div class="cards-list"
          ref="cards">
-        <div v-for="card in cardFilter" :key="card.cardId">
-          <img class="single-card" :src="card.img" @click="pickCard(card)">
-        </div>
+      <div v-for="card in cardFilter" :key="card.cardId">
+        <img class="single-card" :src="card.img" @click="pickCard(card)">
+      </div>
     </div>
     <div class="listCards" @change="changeClass(this.props.MenuClass)"> <!-- Выбранные карты -->
       <div>
@@ -56,7 +56,7 @@
     },
     data() {
       return {
-        massive:[],
+        massive: [],
         cards: [], //карты
         races: [], //рассы
         currentClass: '',
@@ -82,7 +82,7 @@
 
     computed: {
 
-      cardFilter(){
+      cardFilter() {
         this.massive = this.cards;
         this.massive = this.classFiltered();
         this.massive = this.manaFiltered();
@@ -116,16 +116,9 @@
       this.getCards()
     },
 
-    watch: {
-
-    },
-
-    beforeDestroy() {
-    },
-
     methods: {
 
-      classFiltered: function() {
+      classFiltered: function () {
         if (this.MenuClass !== 'Neutral') {
           if (this.currentClass !== this.MenuClass) {
             this.currentClass = this.MenuClass;
@@ -139,18 +132,18 @@
           return this.massive.filter(card => card['playerClass'] === this.MenuClass)
       },
 
-      rarityFiltered: function(){
-        if(this.MenuRarity !==''){
+      rarityFiltered: function () {
+        if (this.MenuRarity !== 'all' && this.MenuRarity !=='') {
           return this.massive.filter(card => card['rarity'] === this.MenuRarity)
-        }else
+        } else
           return this.massive;
       },
 
-      manaFiltered: function() {
-        if(this.MenuMana > -1) {
+      manaFiltered: function () {
+        if (this.MenuMana < 9 && this.MenuMana > -1) {
           return this.massive.filter(card => card['cost'] === this.MenuMana)
-        }else if(this.MenuMana === 9){
-          return this.massive.filter(card => card['cost'] >= this.MenuMana)
+        } else if (this.MenuMana === 9) {
+          return this.massive.filter(card => card['cost'] > this.MenuMana)
         }
         return this.massive;
       },
