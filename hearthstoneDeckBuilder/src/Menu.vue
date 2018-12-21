@@ -1,25 +1,17 @@
 <!DOCTYPE html>
 <template>
   <div>
-    <div class="menu freeze">
-      <img src="./assets/common.png" @dblclick="filterClass='Neutral'">
-      <img src="./assets/druid-icon.png" @dblclick="filterClass='Druid'">
-      <img src="./assets/hunter-icon.png" @dblclick="filterClass='Hunter'">
-      <img src="./assets/mage-icon.png" @dblclick="filterClass='Mage'">
-      <img src="./assets/pally-icon.png" @dblclick="filterClass='Paladin'">
-      <img src="./assets/priest-icon.png" @dblclick="filterClass='Priest'">
-      <img src="./assets/rogue-icon.png" @dblclick="filterClass='Rogue'">
-      <img src="./assets/shaman-icon.png" @dblclick="filterClass='Shaman'">
-      <img src="./assets/warlock-icon.png" @dblclick="filterClass='Warlock'">
-      <img src="./assets/warrior-icon.png" @dblclick="filterClass='Warrior'">
-
+    <div class="menu freeze form-check-inline">
+      <div v-for="clas in classes">
+        <img :src="getImgUrl(clas)" @dblclick="setClass(clas)">
+        <input type="radio" class="form-check-input"  name="class" @click="setClass(clas)">
+        <label class="form-check-label">{{clas.toString()}}</label>
+      </div>
 
       <div v-for="cost in manaData" class="form-check form-check-inline">
         <input type="radio" class="form-check-input"  name="mana" @click="setManaCost(cost)">
         <label class="form-check-label">{{cost.toString()}}</label>
       </div>
-
-
       <div v-for="rar in rarities" class="form-check form-check-inline">
         <input type="radio" class="form-check-input"  name="rarity" @click="setRarity(rar)">
         <label class="form-check-label">{{rar.toString()}}</label>
@@ -38,7 +30,10 @@
 
 <script>
 
+  import BootstrapVue from 'bootstrap-vue'
   import Deck from './Deck'
+  import 'bootstrap/dist/css/bootstrap.css'
+  import 'bootstrap-vue/dist/bootstrap-vue.css'
 
   export default {
     name: "Menu",
@@ -60,6 +55,7 @@
         selectedMechanics: [], //Выбранные механики
         mechanics: [],
         races: ['all'],
+        classes:["Neutral","Druid","Shaman","Hunter","Warrior","Warlock","Mage","Priest","Rouge","Paladin"],
         heroes: [],
         manaData: ['all', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 
@@ -79,6 +75,13 @@
         this.rarity = item
       },
 
+      setClass: function(item){
+        this.filterClass=item;
+      },
+
+      getImgUrl(pet) {
+        return ("assets/" + pet + ".png")
+      },
 
       getAdventures: async function () {
         const resp = await fetch('https://omgvamp-hearthstone-v1.p.mashape.com/cards?collectible=1', {
