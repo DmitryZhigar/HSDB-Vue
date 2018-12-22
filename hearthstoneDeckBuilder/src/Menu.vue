@@ -2,18 +2,25 @@
 <template>
   <div>
     <div class="menu freeze">
-      <div v-for="clas in classes1" class="currentClass" >
-        <img :src=' "./assets/" + clas + ".png" ' @dblclick="setClass(clas)">
-      </div>
+      <nav class="navbar navbar-light bg-light">
+        <div style="width: 50%">
+          <a class="navbar-brand" v-for="clas in classes1">
+            <img :src=' "./assets/" + clas + ".png" ' @dblclick="setClass(clas)">
+          </a>
+        </div>
+        <div style="width: 50%;">
+         Mana: <div v-for="cost in manaData" class="currentClass">
+            <input type="radio" name="mana" @click="setManaCost(cost)">
+            <label>{{cost.toString()}}</label>
+          </div>
+          <br>
+          Rarity: <div v-for="rar in rarities" class="currentClass">
+            <input type="radio" name="rarity" @click="setRarity(rar)">
+            <label>{{rar.toString()}}</label>
+          </div>
+        </div>
+      </nav>
 
-      <div v-for="cost in manaData" class="form-check form-check-inline">
-        <input type="radio" class="form-check-input"  name="mana" @click="setManaCost(cost)">
-        <label class="form-check-label">{{cost.toString()}}</label>
-      </div>
-      <div v-for="rar in rarities" class="form-check form-check-inline">
-        <input type="radio" class="form-check-input"  name="rarity" @click="setRarity(rar)">
-        <label class="form-check-label">{{rar.toString()}}</label>
-      </div>
 
       <!--<div v-for="rac in races" style="display: inline">
         <input type="radio" name="race" @click="setManaCost(rac)">{{rac.toString()}}
@@ -36,7 +43,7 @@
   export default {
     name: "Menu",
     components: {
-      Deck
+      Deck, BootstrapVue
     },
 
     data() {
@@ -53,7 +60,7 @@
         selectedMechanics: [], //Выбранные механики
         mechanics: [],
         races: ['all'],
-        classes1:['Neutral','Druid','Shaman','Hunter','Warrior','Warlock','Mage','Priest','Rouge','Paladin'],
+        classes1: ['Neutral', 'Druid', 'Shaman', 'Hunter', 'Warrior', 'Warlock', 'Mage', 'Priest', 'Rouge', 'Paladin'],
         heroes: [],
         manaData: ['all', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 
@@ -73,8 +80,8 @@
         this.rarity = item
       },
 
-      setClass: function(item){
-        this.filterClass=item;
+      setClass: function (item) {
+        this.filterClass = item;
       },
 
       getImgUrl(pet) {
@@ -148,8 +155,8 @@
 
   .menu img {
     display: inline-block;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
   }
 
   .freeze {
