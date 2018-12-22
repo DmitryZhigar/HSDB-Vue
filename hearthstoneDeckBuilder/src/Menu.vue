@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <template>
   <div>
-    <div class="menu freeze form-check-inline">
-      <div v-for="clas in classes">
-        <img :src="getImgUrl(clas)" @dblclick="setClass(clas)">
-        <input type="radio" class="form-check-input"  name="class" @click="setClass(clas)">
-        <label class="form-check-label">{{clas.toString()}}</label>
+    <div class="menu freeze">
+      <div v-for="clas in classes1" class="currentClass" >
+        <img :src=' "./assets/" + clas + ".png" ' @dblclick="setClass(clas)">
       </div>
 
       <div v-for="cost in manaData" class="form-check form-check-inline">
@@ -55,7 +53,7 @@
         selectedMechanics: [], //Выбранные механики
         mechanics: [],
         races: ['all'],
-        classes:["Neutral","Druid","Shaman","Hunter","Warrior","Warlock","Mage","Priest","Rouge","Paladin"],
+        classes1:['Neutral','Druid','Shaman','Hunter','Warrior','Warlock','Mage','Priest','Rouge','Paladin'],
         heroes: [],
         manaData: ['all', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 
@@ -80,7 +78,7 @@
       },
 
       getImgUrl(pet) {
-        return ("assets/" + pet + ".png")
+        return `./assets/${pet.toString()}.png`;
       },
 
       getAdventures: async function () {
