@@ -5,7 +5,7 @@
       <nav class="navbar navbar-light bg-light">
         <div style="width: 50%">
           <a class="navbar-brand" v-for="clas in classes1">
-            <img :src=' "./assets/" + clas + ".png" ' @click="setClass(clas)">
+            <img :src=' "./assets/" + clas + ".png" ' @click="classToDeck=clas">
           </a>
         </div>
         <div style="width: 50%;">
@@ -15,7 +15,7 @@
           </div>
           <br>
           Rarity: <div v-for="rar in rarities" class="currentClass">
-            <input type="radio" name="rarity" @click="setRarity(rar)">
+            <input type="radio" name="rarity" @click="rarityToDeck=rar">
             <label>{{rar.toString()}}</label>
           </div>
         </div>
