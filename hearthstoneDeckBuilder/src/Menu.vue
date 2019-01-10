@@ -5,12 +5,12 @@
       <nav class="navbar navbar-light bg-light">
         <div style="width: 50%">
           <a class="navbar-brand" v-for="clas in classes1">
-            <img :src=' "./assets/" + clas + ".png" ' @dblclick="setClass(clas)">
+            <img :src=' "./assets/" + clas + ".png" ' @click="setClass(clas)">
           </a>
         </div>
         <div style="width: 50%;">
          Mana: <div v-for="cost in manaData" class="currentClass">
-            <input type="radio" name="mana" @click="setManaCost(cost)">
+            <input type="radio" name="mana" @click="manaToDeck=cost">
             <label>{{cost.toString()}}</label>
           </div>
           <br>
@@ -49,7 +49,7 @@
     data() {
       return {
         filterClass: 'Neutral',
-        manaCost: -1,
+        mana: -1,
         rarity: '',
         rarities: ['all'],
         adventures: [], //приключения
@@ -70,23 +70,38 @@
     created() {
       this.getAdventures()
     },
+
+    computed:{
+
+      manaToDeck:{
+        set:function (m) {
+          this.mana = m
+        },
+        get: function () {
+          return this.mana
+        }
+      },
+
+      rarityToDeck:{
+        set:function (r) {
+          this.rarity=r
+        },
+        get:function () {
+          return this.rarity
+        }
+      },
+
+      classToDeck:{
+        set:function (c) {
+          this.filterClass = c
+        },
+        get:function () {
+          return this.filterClass
+        }
+      }
+
+    },
     methods: {
-
-      setManaCost: function (item) {
-        this.manaCost = item;
-      },
-
-      setRarity: function (item) {
-        this.rarity = item
-      },
-
-      setClass: function (item) {
-        this.filterClass = item;
-      },
-
-      getImgUrl(pet) {
-        return `./assets/${pet.toString()}.png`;
-      },
 
       getAdventures: async function () {
         const resp = await fetch('https://omgvamp-hearthstone-v1.p.mashape.com/cards?collectible=1', {
