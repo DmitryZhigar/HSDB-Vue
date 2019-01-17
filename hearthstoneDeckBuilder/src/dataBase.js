@@ -1,10 +1,17 @@
 export  const dataBase = {
   temporaryStorage: {
       cards: [], //карты
-      heroes: [], //герои
-      races: [], //рассы
-      adventures: [], //приключения
-      mechanics: [], //механики
+      heroes: ['all'], //герои
+      races: ['all'], //рассы
+      adventures: ['all'], //приключения
+      mechanics: ['all'], //механики
+      rarity:['all'],// редкость
+  },
+
+  addRarity: function(newRare){
+    if (!this.temporaryStorage.rarity.includes(newRare)) {
+      this.temporaryStorage.rarity.push(newRare)
+    }
   },
 
   addCard: function (newCard){
@@ -32,36 +39,6 @@ export  const dataBase = {
   addMechanic: function(newMechanic) {
     if(!this.temporaryStorage.mechanics.includes(newMechanic)){
       this.temporaryStorage.mechanics.push(newMechanic)
-    }
-  },
-
-  Cards:{
-    get: function () {
-      return this.temporaryStorage.cards
-    }
-  },
-
-  Heroes:{
-    get: function () {
-      return this.temporaryStorage.heroes
-    }
-  },
-
-  Mechanics:{
-    get: function () {
-      return this.temporaryStorage.mechanics
-    }
-  },
-
-  Adventures:{
-    get: function () {
-      return this.temporaryStorage.adventures
-    }
-  },
-
-  Races:{
-    get: function () {
-      return this.temporaryStorage.races
     }
   },
 };
