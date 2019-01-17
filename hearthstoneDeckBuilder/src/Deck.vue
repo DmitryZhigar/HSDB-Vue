@@ -3,7 +3,7 @@
     <vue-loading :active.sync="!this.isLoaded" style=" margin-top: 5%; text-align: center">
     </vue-loading>
     <div class="cards-list"
-         ref="cards">
+         ref="massive">
       <div v-for="card in cardFilter" :key="card.cardId">
         <img class="single-card" :src="card.img" @click="pickCard(card)">
       </div>
@@ -35,6 +35,9 @@
 
   import {encode, decode} from 'deckstrings'
   import VueLoading from "vue-loading-overlay/src/js/Component";
+  import {dataBase} from './dataBase.js'
+  import 'bootstrap/dist/css/bootstrap.css'
+  import 'bootstrap-vue/dist/bootstrap-vue.css'
 
   export default {
     name: "Deck",
@@ -57,10 +60,7 @@
     data() {
       return {
         massive: [],
-        cards: [], //карты
-        races: [], //рассы
         currentClass: '',
-        mechanics: [], //механики
 
         classes: {
           Druid: 274,
@@ -82,9 +82,9 @@
 
     computed: {
 
-      cardFilter() {
-        this.massive = this.cards;
-        this.massive = this.classFiltered();
+      cardFilter: function () {
+        this.massive = dataBase.temporaryStorage.cards
+        this.massive = this.classFiltered()
         this.massive = this.manaFiltered();
         this.massive = this.rarityFiltered();
         return this.massive;
@@ -118,6 +118,30 @@
 
     methods: {
 
+      addCard(card) {
+        dataBase.addCard(card)
+      },
+
+      addMechanic(mechanic) {
+        dataBase.addMechanic(mechanic)
+      },
+
+      addHero(hero) {
+        dataBase.addHero(hero)
+      },
+
+      addRace(race) {
+        dataBase.addRace(race)
+      },
+
+      addAdventure(adventure) {
+        dataBase.addAdventure(adventure)
+      },
+
+      addRarity(rarity) {
+        dataBase.addRarity(rarity)
+      },
+
       classFiltered: function () {
         if (this.MenuClass !== 'Neutral') {
           if (this.currentClass !== this.MenuClass) {
@@ -133,7 +157,7 @@
       },
 
       rarityFiltered: function () {
-        if (this.MenuRarity !== 'all' && this.MenuRarity !=='') {
+        if (this.MenuRarity !== 'all' && this.MenuRarity !== '') {
           return this.massive.filter(card => card['rarity'] === this.MenuRarity)
         } else
           return this.massive;
@@ -162,6 +186,17 @@
         for (let adv in resp) {
           if (resp[adv].length > 0) {
             for (let card of resp[adv]) {
+
+
+              if ('race' in card) {
+                this.addRace(card.race)
+              }
+              if ('mechanics' in card) {
+                this.addMechanic(card.mechanics)
+              }
+              if ('rarity' in card) {
+                this.addRarity(card.rarity)
+              }
               if ((card['cardSet'] !== 'Hero Skins' &&
                 card['type'] !== 'Hero Power') &&
                 (card['cardSet'] === 'The Boomsday Project' ||
@@ -172,13 +207,15 @@
                   card['cardSet'] === 'Knights of the Frozen Throne' ||
                   card['cardSet'] === 'Kobolds & Catacombs' ||
                   card['cardSet'] === 'Rastakhan\'s Rumble')) {
-                this.cards.push(card)
+                this.addCard(card)
+
               }
             }
           }
         }
         this.isLoaded = true
       },
+
 
       pickCard(card) {
         if (this.pickedCardsCount >= 30) return;
