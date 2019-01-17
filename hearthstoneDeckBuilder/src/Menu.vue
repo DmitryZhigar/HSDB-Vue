@@ -4,32 +4,29 @@
     <div class="menu freeze">
       <nav class="navbar navbar-light bg-light">
         <div style="width: 50%">
-          <a class="navbar-brand" v-for="clas in classes1">
-            <img :src=' "./assets/" + clas + ".png" ' @click="classToDeck=clas">
+          <a class="navbar-brand" v-for="clas in classes">
+            <img :src=' "./assets/" + clas + ".png" ' @click="filterClass=clas">
           </a>
         </div>
         <div style="width: 50%;">
-         Mana: <div v-for="cost in manaData" class="currentClass">
-            <input type="radio" name="mana" @click="manaToDeck=cost">
+          Mana:
+          <div v-for="cost in manaData" class="currentClass">
+            <input type="radio" name="mana" @click="mana=cost">
             <label>{{cost.toString()}}</label>
           </div>
           <br>
-          Rarity: <div v-for="rar in rarities" class="currentClass">
-            <input type="radio" name="rarity" @click="rarityToDeck=rar">
+          Rarity:
+          <div v-for="rar in rarities" class="currentClass">
+            <input type="radio" name="rarity" @click="rarity=rar">
             <label>{{rar.toString()}}</label>
           </div>
         </div>
       </nav>
-
-
-      <!--<div v-for="rac in races" style="display: inline">
-        <input type="radio" name="race" @click="setManaCost(rac)">{{rac.toString()}}
-      </div>-->
     </div>
-    <Deck class="deck" :menu-class="filterClass.toString()"
-          v-bind:menu-mana="manaCost"
-          :menu-rarity="rarity.toString()"/>
-
+    <Deck class="deck"
+          :menu-class="filterClass.toString()"
+          :menu-mana="mana"
+          :menu-rarity="rarity"/>
   </div>
 </template>
 
@@ -37,6 +34,7 @@
 
   import BootstrapVue from 'bootstrap-vue'
   import Deck from './Deck'
+  import {dataBase} from './dataBase'
   import 'bootstrap/dist/css/bootstrap.css'
   import 'bootstrap-vue/dist/bootstrap-vue.css'
 
@@ -48,107 +46,17 @@
 
     data() {
       return {
+        //props for deck
         filterClass: 'Neutral',
         mana: -1,
         rarity: '',
-        rarities: ['all'],
-        adventures: [], //приключения
-        selectedAdventure: [], //Выбранные приключения
-        selectedRaces: [], //Выбранные рассы
-        selectedHero: '', //Выбранный герой
-        selectedRariry: '', //Выбранная редкость карт
-        selectedMechanics: [], //Выбранные механики
-        mechanics: [],
-        races: ['all'],
-        classes1: ['Neutral', 'Druid', 'Shaman', 'Hunter', 'Warrior', 'Warlock', 'Mage', 'Priest', 'Rouge', 'Paladin'],
-        heroes: [],
+
+        rarities: dataBase.temporaryStorage.rarity,
+        races: dataBase.temporaryStorage.races,
+        classes: ['Neutral', 'Druid', 'Shaman', 'Hunter', 'Warrior', 'Warlock', 'Mage', 'Priest', 'Rogue', 'Paladin'],
         manaData: ['all', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-
       }
     },
-
-    created() {
-      this.getAdventures()
-    },
-
-    computed:{
-
-      manaToDeck:{
-        set:function (m) {
-          this.mana = m
-        },
-        get: function () {
-          return this.mana
-        }
-      },
-
-      rarityToDeck:{
-        set:function (r) {
-          this.rarity=r
-        },
-        get:function () {
-          return this.rarity
-        }
-      },
-
-      classToDeck:{
-        set:function (c) {
-          this.filterClass = c
-        },
-        get:function () {
-          return this.filterClass
-        }
-      }
-
-    },
-    methods: {
-
-      getAdventures: async function () {
-        const resp = await fetch('https://omgvamp-hearthstone-v1.p.mashape.com/cards?collectible=1', {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-Mashape-Key': '4dWa3VgL5HmshG40JWJTJDp1qLYvp1vET4vjsniGMTrsJbabTq'
-          },
-          method: 'GET',
-          mode: 'cors',
-          cache: 'default'
-        }).then(r => r.json())
-
-        for (let adv in resp) {
-          if (resp[adv].length > 0) {
-            if (adv !== 'Hero Skins') {
-              this.adventures.push(adv)
-            }
-            for (let card of resp[adv]) {
-              if (card.type === 'Hero' && !this.heroes.includes(card)) {
-                this.heroes.push(card) // Добавление героев TODO - возможность выбора не только класса но и героя
-              } else {
-                if ('race' in card) {
-                  if (!this.races.includes(card.race)) {
-                    this.races.push(card.race)
-                  }
-                }
-                if ('rarity' in card) {
-                  if (!this.rarities.includes(card.rarity)) {
-                    this.rarities.push(card.rarity)
-                  }
-                }
-                if ('mechanics' in card) {
-                  for (let mechanic of card['mechanics']) {
-                    if (!this.mechanics.includes(mechanic.name)) {
-                      this.mechanics.push(mechanic.name)
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-
-    },
-
   }
 </script>
 
